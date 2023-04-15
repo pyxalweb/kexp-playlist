@@ -18,16 +18,20 @@ max_loops = 3
 # Always start at 0
 loop_count = 0
 
+# Get the current date and time
 now = datetime.datetime.now()
 formatted_date_time = now.strftime("%Y-%m-%d_%H-%M-%S")
 print(formatted_date_time)
 
+# Get the directory of the script
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
+# Create an 'outputs' directory if it doesn't exist
 outputs_dir = os.path.join(script_dir, "outputs")
 if not os.path.exists(outputs_dir):
     os.makedirs(outputs_dir)
 
+# Create the CSV file name and path
 csv_file_path = os.path.join(outputs_dir, 'output_' + formatted_date_time + '.csv')
 
 # Create a CSV file
@@ -78,8 +82,6 @@ with open(csv_file_path, 'w', newline='') as csvfile:
         except Exception as e:
             print("Error:", e)
             break
-    
-
 
 # Close the browser
 driver.quit()
