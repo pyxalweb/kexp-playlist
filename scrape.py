@@ -26,7 +26,7 @@ print(formatted_date_time)
 # 'open' returns a file object, which is assigned to the variable 'csvfile'
 # 'w' parameter indicates that we are writing to the file
 # 'newline' parameter is required to avoid blank lines between rows
-with open(formatted_date_time + '-output.csv', 'w', newline='') as csvfile:
+with open('output_' + formatted_date_time + '.csv', 'w', newline='') as csvfile:
     writer = csv.writer(csvfile)
     writer.writerow(['Title', 'Artist'])
     print('Created CSV file')
