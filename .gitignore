@@ -2,5 +2,6 @@
 node_modules/
 test-scripts/
 outputs/
+outputs-old-naming-formats/
 output.csv
 geckodriver.log
