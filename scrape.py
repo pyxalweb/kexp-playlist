@@ -12,7 +12,7 @@ driver = webdriver.Firefox()
 driver.get('https://www.kexp.org/playlist/')
 
 # How many pages to scrape
-max_loops = 3
+max_loops = 1
 
 # Always start at 0
 loop_count = 0
@@ -28,7 +28,7 @@ print(formatted_date_time)
 # 'newline' parameter is required to avoid blank lines between rows
 with open(formatted_date_time + '-output.csv', 'w', newline='') as csvfile:
     writer = csv.writer(csvfile)
-    writer.writerow(['Title', 'Content'])
+    writer.writerow(['Title', 'Artist'])
     print('Created CSV file')
 
     while loop_count < max_loops:
@@ -53,12 +53,12 @@ with open(formatted_date_time + '-output.csv', 'w', newline='') as csvfile:
             # Write the playlist items to the CSV file
             for playlist_item in playlist_items:
                 primary_content_div = playlist_item.find('div', class_='PlaylistItem-primaryContent')
-                # Check if the playlist item has a title and content
-                # If the playlist item does not have a title and content, skip it
+                # Check if the playlist item has a song title and artist name
+                # If it does not, then skip it
                 if primary_content_div.find('h3', class_='u-mb0' != None) and (primary_content_div.find('div', class_='u-mb1') != None):
                     title = primary_content_div.find('h3', class_='u-mb0').get_text(strip=True)
-                    content = primary_content_div.find('div', class_='u-mb1').get_text(strip=True)
-                    writer.writerow([title, content])
+                    artist = primary_content_div.find('div', class_='u-mb1').get_text(strip=True)
+                    writer.writerow([title, artist])
                     print('Wrote playlist item to CSV file')
 
             # Click the 'previous' link
