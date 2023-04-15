@@ -58,8 +58,8 @@ with open(formatted_date_time + '-output.csv', 'w', newline='') as csvfile:
                 if primary_content_div.find('h3', class_='u-mb0' != None) and (primary_content_div.find('div', class_='u-mb1') != None):
                     title = primary_content_div.find('h3', class_='u-mb0').get_text(strip=True)
                     content = primary_content_div.find('div', class_='u-mb1').get_text(strip=True)
-                writer.writerow([title, content])
-                print('Wrote playlist item to CSV file')
+                    writer.writerow([title, content])
+                    print('Wrote playlist item to CSV file')
 
             # Click the 'previous' link
             previous_link = driver.find_element(By.ID, "previous")
