@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 import csv
 import time
+import datetime
 
 # Create a new instance of the Firefox driver
 driver = webdriver.Firefox()
@@ -16,12 +17,16 @@ max_loops = 3
 # Always start at 0
 loop_count = 0
 
+now = datetime.datetime.now()
+formatted_date_time = now.strftime("%Y-%m-%d_%H-%M-%S")
+print(formatted_date_time)
+
 # Create a CSV file
 # 'with' statement will automatically close the file when done
 # 'open' returns a file object, which is assigned to the variable 'csvfile'
 # 'w' parameter indicates that we are writing to the file
 # 'newline' parameter is required to avoid blank lines between rows
-with open('output.csv', 'w', newline='') as csvfile:
+with open(formatted_date_time + '-output.csv', 'w', newline='') as csvfile:
     writer = csv.writer(csvfile)
     writer.writerow(['Title', 'Content'])
     print('Created CSV file')
