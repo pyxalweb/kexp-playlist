@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
+import os
 import csv
 import time
 import datetime
@@ -21,12 +22,20 @@ now = datetime.datetime.now()
 formatted_date_time = now.strftime("%Y-%m-%d_%H-%M-%S")
 print(formatted_date_time)
 
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
+outputs_dir = os.path.join(script_dir, "outputs")
+if not os.path.exists(outputs_dir):
+    os.makedirs(outputs_dir)
+
+csv_file_path = os.path.join(outputs_dir, 'output_' + formatted_date_time + '.csv')
+
 # Create a CSV file
 # 'with' statement will automatically close the file when done
 # 'open' returns a file object, which is assigned to the variable 'csvfile'
 # 'w' parameter indicates that we are writing to the file
 # 'newline' parameter is required to avoid blank lines between rows
-with open('output_' + formatted_date_time + '.csv', 'w', newline='') as csvfile:
+with open(csv_file_path, 'w', newline='') as csvfile:
     writer = csv.writer(csvfile)
     writer.writerow(['Title', 'Artist'])
     print('Created CSV file')
@@ -69,6 +78,8 @@ with open('output_' + formatted_date_time + '.csv', 'w', newline='') as csvfile:
         except Exception as e:
             print("Error:", e)
             break
+    
+
 
 # Close the browser
 driver.quit()
