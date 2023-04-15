@@ -1,0 +1,6 @@
+.DS_Store
+node_modules/
+test-scripts/
+outputs/
+output.csv
+geckodriver.log
