@@ -3,5 +3,6 @@ node_modules/
 test-scripts/
 outputs/
 outputs-old/
+outputs-test/
 output.csv
 geckodriver.log

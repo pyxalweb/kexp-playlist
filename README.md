@@ -13,8 +13,6 @@ For each playlist item, the script will check that it contains an h3 with a clas
 
 Once all of the items within the 'playlist-plays' div have been looped through then the script will look for a link at the bottom of the page that has an id of 'previous'. This clicks the 'Earlier' pagination link so that it can begin to loop through another page's 'playlist-plays' div. It will do this as many times as desired by the user in the 'max_loops' variable.
 
-todo: Write a function that takes the csv files found within the  'outputs' directory and combines them into one csv file, removing duplicates/
-
 todo: Write a cron job to automatically run this python script at a specific time of day.
 
 todo: Using the Spotify API, write a function that takes the combined CSV file and syncs it to a Spotify playlist.

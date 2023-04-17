@@ -13,7 +13,7 @@ driver = webdriver.Firefox()
 driver.get('https://www.kexp.org/playlist/')
 
 # How many pages to scrape
-max_loops = 3
+max_loops = 1
 
 # Always start at 0
 loop_count = 0
@@ -85,5 +85,37 @@ with open(csv_file_path, 'w', newline='') as csvfile:
 
 # Close the browser
 driver.quit()
+
+print('Done scraping!')
+
+###################################
+# Combine CSV files into one file #
+###################################
+# Create a list to store all the rows from the CSV files
+all_rows = []
+
+# Loop through all the files in the outputs directory
+for filename in os.listdir(outputs_dir):
+    if filename.endswith(".csv") and filename != "combined.csv":  # Skip "combined.csv" file
+        file_path = os.path.join(outputs_dir, filename)
+        # Open the CSV file and read its contents
+        with open(file_path, 'r', newline='') as csvfile:
+            reader = csv.reader(csvfile)
+            # Skip the header row
+            next(reader)
+            # Append all rows to the list of all rows
+            for row in reader:
+                if row not in all_rows:
+                    all_rows.append(row)
+
+# Create the combined CSV file
+combined_csv_file_path = os.path.join(outputs_dir, 'combined.csv')
+with open(combined_csv_file_path, 'w', newline='') as combined_csvfile:
+    writer = csv.writer(combined_csvfile)
+    writer.writerow(['Title', 'Artist'])
+    # Write all rows to the combined CSV file
+    writer.writerows(all_rows)
+
+print('Combined CSV files into', combined_csv_file_path)
 
 print('Done!')
