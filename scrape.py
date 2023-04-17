@@ -34,7 +34,9 @@ if not os.path.exists(outputs_dir):
 # Create the CSV file name and path
 csv_file_path = os.path.join(outputs_dir, 'output_' + formatted_date_time + '.csv')
 
-# Create a CSV file
+###################################
+# Created the 'output' CSV file   #
+###################################
 # 'with' statement will automatically close the file when done
 # 'open' returns a file object, which is assigned to the variable 'csvfile'
 # 'w' parameter indicates that we are writing to the file
@@ -44,6 +46,9 @@ with open(csv_file_path, 'w', newline='') as csvfile:
     writer.writerow(['Title', 'Artist'])
     print('Created CSV file')
 
+    ###################################
+    # Scrape the KEXP playlist        #
+    ###################################
     while loop_count < max_loops:
         try:
             # Wait X seconds between each page
@@ -99,7 +104,7 @@ all_rows = []
 
 # Loop through all the files in the outputs directory
 for filename in files:
-    if filename.endswith(".csv") and filename != "combined.csv":  # Skip "combined.csv" file
+    if filename.endswith(".csv") and filename != "combined.csv":
         file_path = os.path.join(outputs_dir, filename)
         # Open the CSV file and read its contents
         with open(file_path, 'r', newline='') as csvfile:
