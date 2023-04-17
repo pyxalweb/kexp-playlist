@@ -91,11 +91,14 @@ print('Done scraping!')
 ###################################
 # Combine CSV files into one file #
 ###################################
+# Get a list of files in the outputs directory in descending alphabetical order
+files = sorted(os.listdir(outputs_dir), reverse=True)
+
 # Create a list to store all the rows from the CSV files
 all_rows = []
 
 # Loop through all the files in the outputs directory
-for filename in os.listdir(outputs_dir):
+for filename in files:
     if filename.endswith(".csv") and filename != "combined.csv":  # Skip "combined.csv" file
         file_path = os.path.join(outputs_dir, filename)
         # Open the CSV file and read its contents
