@@ -6,3 +6,5 @@ outputs-old/
 outputs-test/
 output.csv
 geckodriver.log
+.cache
+app-credentials.py

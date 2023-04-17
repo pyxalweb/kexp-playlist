@@ -15,4 +15,6 @@ Once all of the items within the 'playlist-plays' div have been looped through t
 
 todo: Write a cron job to automatically run this python script at a specific time of day.
 
-todo: Using the Spotify API, write a function that takes the combined CSV file and syncs it to a Spotify playlist.
+todo: Figure out what is causing the following errors to be printed to terminal when adding songs to the Spotify playlist. It seems to be a permissions issue.
+"Couldn't write token to cache at: .cache"
+"Couldn't read cache at: .cache"

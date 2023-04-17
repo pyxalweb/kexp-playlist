@@ -5,6 +5,8 @@ import os
 import csv
 import time
 import datetime
+import spotipy
+from spotipy.oauth2 import SpotifyOAuth
 
 # Create a new instance of the Firefox driver
 driver = webdriver.Firefox()
@@ -125,5 +127,46 @@ with open(combined_csv_file_path, 'w', newline='') as combined_csvfile:
     writer.writerows(all_rows)
 
 print('Combined CSV files into', combined_csv_file_path)
+
+#############################################
+# Import songs from CSV to Spotify Playlist #
+#############################################
+def add_to_spotify_playlist(playlist_id, csv_file_path, client_id, client_secret, redirect_uri, scope):
+    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id,
+                                                   client_secret=client_secret,
+                                                   redirect_uri=redirect_uri,
+                                                   scope=scope))
+
+    # Read the CSV file and store all rows in a list
+    all_rows = []
+    with open(csv_file_path, 'r', newline='') as csvfile:
+        reader = csv.reader(csvfile)
+        next(reader)
+        for row in reader:
+            if row not in all_rows:
+                all_rows.append(row)
+
+    # Get the current songs in the playlist
+    current_songs = []
+    playlist = sp.playlist(playlist_id)
+    for item in playlist['tracks']['items']:
+        current_songs.append(item['track']['id'])
+
+    # Add songs to the playlist, checking for duplicates
+    songs_added = 0
+    for row in all_rows:
+        title, artist = row[0], row[1]
+        query = f'track:{title} artist:{artist}'
+        results = sp.search(q=query, type='track', limit=1)
+        if results['tracks']['items']:
+            track_id = results['tracks']['items'][0]['id']
+            if track_id not in current_songs:
+                sp.playlist_add_items(playlist_id, [track_id])
+                songs_added += 1
+
+    print(f'Songs added to playlist: {songs_added}')
+
+#add_to_spotify_playlist('YOUR_PLAYLIST_ID', combined_csv_file_path, 'YOUR_CLIENT_ID', 'YOUR_CLIENT_SECRET', 'http://127.0.0.1:8080', 'playlist-modify-public')
+
 
 print('Done!')
