@@ -14,6 +14,7 @@ For each playlist item, the script will check that it contains the following:
 - An h3 with a class of 'u-mb0' which represents the song title.
 - A div with a class of 'u-mb1' which represents the artist name.
 - A div with a class of 'u-h5' which represnts the publish year. NOTE: There are two divs with a class of 'u-h5' and we must get the last one only. We get the year because currently the script is configured to only get songs from X year as I am using this script to generate a playlist of songs that KEXP plays that are (new) from the current year. In the future this will be optional.
+
 If these elements exist, then it will write the song title and artist name to the CSV file. If these elements do not exist then it will skip the playlist item because it is not the desired data we want; ex: air breaks, advertisements, or other content that KEXP sometimes displays in the 'playlist-plays' div.
 
 Once all of the items within the 'playlist-plays' div have been looped through then the script will look for a link at the bottom of the page that has an id of 'previous'. This clicks the 'Earlier' pagination link so that it can begin to loop through another page's 'playlist-plays' div. It will do this as many times as desired by the user in the 'max_loops' variable.
