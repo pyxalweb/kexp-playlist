@@ -5,6 +5,7 @@ import os
 import csv
 import time
 import datetime
+import re
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 
@@ -15,7 +16,7 @@ driver = webdriver.Firefox()
 driver.get('https://www.kexp.org/playlist/')
 
 # How many pages to scrape
-max_loops = 1
+max_loops = 20
 
 # Always start at 0
 loop_count = 0
@@ -73,13 +74,16 @@ with open(csv_file_path, 'w', newline='') as csvfile:
             # Write the playlist items to the CSV file
             for playlist_item in playlist_items:
                 primary_content_div = playlist_item.find('div', class_='PlaylistItem-primaryContent')
-                # Check if the playlist item has a song title and artist name
+                # Check if the playlist item has a song title, artist name, and year
                 # If it does not, then skip it
-                if primary_content_div.find('h3', class_='u-mb0' != None) and (primary_content_div.find('div', class_='u-mb1') != None):
+                # We use 'find_all' because playlist items have multiple 'u-h5' divs and we only want the last one                
+                if primary_content_div.find('h3', class_='u-mb0' != None) and (primary_content_div.find('div', class_='u-mb1') != None) and (primary_content_div.find_all('div', class_='u-h5') != []):
                     title = primary_content_div.find('h3', class_='u-mb0').get_text(strip=True)
                     artist = primary_content_div.find('div', class_='u-mb1').get_text(strip=True)
-                    writer.writerow([title, artist])
-                    print('Wrote playlist item to CSV file')
+                    year = primary_content_div.find_all('div', class_='u-h5')[-1].get_text(strip=True)
+                    if re.match('^2023', year):
+                        writer.writerow([title, artist])
+                        print('Wrote playlist item to CSV file')
 
             # Click the 'previous' link
             previous_link = driver.find_element(By.ID, "previous")
@@ -155,6 +159,10 @@ def add_to_spotify_playlist(playlist_id, csv_file_path, client_id, client_secret
     # Add songs to the playlist, checking for duplicates
     songs_added = 0
     for row in all_rows:
+        # Wait X seconds between each song
+        print('Waiting 5 seconds')
+        time.sleep(5)
+
         title, artist = row[0], row[1]
         query = f'track:{title} artist:{artist}'
         results = sp.search(q=query, type='track', limit=1)
@@ -166,7 +174,6 @@ def add_to_spotify_playlist(playlist_id, csv_file_path, client_id, client_secret
 
     print(f'Songs added to playlist: {songs_added}')
 
-#add_to_spotify_playlist('YOUR_PLAYLIST_ID', combined_csv_file_path, 'YOUR_CLIENT_ID', 'YOUR_CLIENT_SECRET', 'http://127.0.0.1:8080', 'playlist-modify-public')
-
+add_to_spotify_playlist('XXXXXXXXXXXXXXXXXXXXXX', combined_csv_file_path, 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'http://127.0.0.1:8080', 'playlist-modify-public')
 
 print('Done!')

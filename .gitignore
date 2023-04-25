@@ -4,7 +4,9 @@ test-scripts/
 outputs/
 outputs-old/
 outputs-test/
+outputs-test-2023-only/
 output.csv
 geckodriver.log
 .cache
 app-credentials.py
+scrape-with-api-creds.py
