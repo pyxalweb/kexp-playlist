@@ -149,22 +149,25 @@ def add_to_spotify_playlist(playlist_id, csv_file_path, client_id, client_secret
         for row in reader:
             if row not in all_rows:
                 all_rows.append(row)
+    print(f'All rows: {all_rows}')
+
 
     # Get the current songs in the playlist
     current_songs = []
     playlist = sp.playlist(playlist_id)
     for item in playlist['tracks']['items']:
-        current_songs.append(item['track']['id'])
+        current_songs.append((item['track']['name'], item['track']['artists'][0]['name']))
+    print(f'Current songs: {current_songs}')
 
     # Add songs to the playlist, checking for duplicates
     songs_added = 0
     for row in all_rows:
         title, artist = row[0], row[1]
-        query = f'track:{title} artist:{artist}'
-        results = sp.search(q=query, type='track', limit=1)
-        if results['tracks']['items']:
-            track_id = results['tracks']['items'][0]['id']
-            if track_id not in current_songs:
+        if (title, artist) not in current_songs:
+            query = f'track:{title} artist:{artist}'
+            results = sp.search(q=query, type='track', limit=1)
+            if results['tracks']['items']:
+                track_id = results['tracks']['items'][0]['id']
                 # Wait X seconds between adding each song
                 print('Waiting 5 seconds')
                 time.sleep(5)
