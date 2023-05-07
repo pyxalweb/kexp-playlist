@@ -29,3 +29,5 @@ TODO: Figure out what is causing the following errors to be printed to terminal 
 "Couldn't read cache at: .cache"
 
 TODO: Modify the script so that scraping songs from a specific year can easily be toggled on/off so that we can easily switch between scraping all songs or by year -- without having to manually edit the code.
+
+TODO: Add feature to skip scraping KEXP and creating CSV files, and just go directly to synching the CSV to Spotify. This may be helpful because I've encountered a case where I scrape 20 playlist pages (which takes approximately 1 minute and 40 seconds at 5 seconds per page) and then it proceeds to connect to Spotify, but I forgot to log in via the web browser, which then causes the script to fail. Now in order to continue, I have to run the script again and needlessly scrape the pages again or change the code to scrape only 1 page and have it continue. There may be other cases in the future where this could be useful.

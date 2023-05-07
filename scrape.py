@@ -16,7 +16,7 @@ driver = webdriver.Firefox()
 driver.get('https://www.kexp.org/playlist/')
 
 # How many pages to scrape
-max_loops = 20
+max_loops = 1
 
 # Always start at 0
 loop_count = 0
@@ -38,7 +38,7 @@ if not os.path.exists(outputs_dir):
 csv_file_path = os.path.join(outputs_dir, 'output_' + formatted_date_time + '.csv')
 
 ###################################
-# Created the 'output' CSV file   #
+# Create the 'output' CSV file    #
 ###################################
 # 'with' statement will automatically close the file when done
 # 'open' returns a file object, which is assigned to the variable 'csvfile'
@@ -159,18 +159,19 @@ def add_to_spotify_playlist(playlist_id, csv_file_path, client_id, client_secret
     # Add songs to the playlist, checking for duplicates
     songs_added = 0
     for row in all_rows:
-        # Wait X seconds between each song
-        print('Waiting 5 seconds')
-        time.sleep(5)
-
         title, artist = row[0], row[1]
         query = f'track:{title} artist:{artist}'
         results = sp.search(q=query, type='track', limit=1)
         if results['tracks']['items']:
             track_id = results['tracks']['items'][0]['id']
             if track_id not in current_songs:
+                # Wait X seconds between adding each song
+                print('Waiting 5 seconds')
+                time.sleep(5)
+                # Add the song to the playlist
                 sp.playlist_add_items(playlist_id, [track_id])
                 songs_added += 1
+                print(f'Added {title} by {artist} to playlist')
 
     print(f'Songs added to playlist: {songs_added}')
 
