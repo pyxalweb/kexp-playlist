@@ -149,7 +149,7 @@ def add_to_spotify_playlist(playlist_id, csv_file_path, client_id, client_secret
         for row in reader:
             if row not in all_rows:
                 all_rows.append(row)
-    print(f'All rows: {all_rows}')
+    # print(f'All rows: {all_rows}')
 
     # Get the current songs in the playlist
     current_songs = []
@@ -159,7 +159,7 @@ def add_to_spotify_playlist(playlist_id, csv_file_path, client_id, client_secret
         for item in tracks['items']:
             current_songs.append((item['track']['name'], item['track']['artists'][0]['name']))
         tracks = sp.next(tracks)
-    print(f'Current songs: {current_songs}')
+    # print(f'Current songs: {current_songs}')
 
 
     # Add songs to the playlist, checking for duplicates
