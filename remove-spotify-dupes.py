@@ -1,12 +1,15 @@
+import os
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import time
 
 def remove_duplicate_tracks(playlist_id, client_id, client_secret, redirect_uri, scope):
+    cache_path = os.path.join('.cache', f'spotipy_{os.getpid()}')
     sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id,
                                                    client_secret=client_secret,
                                                    redirect_uri=redirect_uri,
-                                                   scope=scope))
+                                                   scope=scope,
+                                                   cache_path=cache_path))
 
     # Get all tracks from the playlist
     all_tracks = []
