@@ -27,7 +27,7 @@ def remove_duplicate_tracks(playlist_id, client_id, client_secret, redirect_uri,
             track_ids_to_remove = [x[2] for x in all_tracks if x[0] == track[0] and x[1] == track[1]]
             sp.playlist_remove_all_occurrences_of_items(playlist_id, track_ids_to_remove)
             sp.playlist_add_items(playlist_id, [track[2]])
-            print (f"Removed {track[0]} by {track[1]} from the playlist. Waiting 5 seconds to avoid rate limiting.")
+            print (f"Removed duplicate(s) of {track[0]} by {track[1]} from the playlist. Waiting 5 seconds to avoid rate limiting.")
             time.sleep(5)
 
     print(f"Removed {len(duplicate_tracks)} duplicate tracks from the playlist.")
