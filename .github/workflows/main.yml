@@ -1,0 +1,25 @@
+name: Daily Script Execution
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  run-script:
+    name: Run Script
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+
+      - name: Scrape KEXP playlist
+        run: python3 scrape.py 
+        
+      - name: Remove duplicates
+        run: python3 remove-spotify-dupes.py
