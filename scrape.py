@@ -181,6 +181,6 @@ def add_to_spotify_playlist(playlist_id, csv_file_path, client_id, client_secret
 
     print(f'Songs added to playlist: {songs_added}')
 
-add_to_spotify_playlist('XXXXXXXXXXXXXXXXXXXXXX', combined_csv_file_path, 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'http://127.0.0.1:8080', 'playlist-modify-public')
+add_to_spotify_playlist('6l04uhnCMeOjO3R1vLEkHW', combined_csv_file_path, 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'http://127.0.0.1:8080', 'playlist-modify-public')
 
 print('Done!')
