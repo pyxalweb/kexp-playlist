@@ -32,4 +32,4 @@ def remove_duplicate_tracks(playlist_id, client_id, client_secret, redirect_uri,
 
     print(f"Removed {len(duplicate_tracks)} duplicate tracks from the playlist.")
 
-remove_duplicate_tracks('XXXXXXXXXXXXXXXXXXXXXX', 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'http://127.0.0.1:8080', 'playlist-modify-public')
+remove_duplicate_tracks('6l04uhnCMeOjO3R1vLEkHW', os.environ['CLIENT_ID'], os.environ['CLIENT_SECRET'], 'http://127.0.0.1:8080', 'playlist-modify-public')
