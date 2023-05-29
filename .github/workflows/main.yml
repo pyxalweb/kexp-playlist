@@ -29,10 +29,10 @@ jobs:
         env:
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-        run: python3 scrape.py 
+        run: python scrape.py 
         
       - name: Remove duplicates
         env:
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-        run: python3 remove-spotify-dupes.py
+        run: python remove-spotify-dupes.py
