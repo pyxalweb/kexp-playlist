@@ -22,7 +22,7 @@ driver = webdriver.Chrome(options=options)
 driver.get('https://www.kexp.org/playlist/')
 
 # How many pages to scrape
-max_loops = 25
+max_loops = 1
 
 # Always start at 0
 loop_count = 0
