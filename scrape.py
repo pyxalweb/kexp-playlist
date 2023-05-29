@@ -1,5 +1,6 @@
 from selenium import webdriver
-from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+#from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 import os
 import csv
@@ -9,8 +10,13 @@ import re
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 
+# Create a new instance of the Chrome driver
+options = Options()
+options.add_argument("--headless")  # Optional: Run in headless mode
+driver = webdriver.Chrome(options=options)
+
 # Create a new instance of the Firefox driver
-driver = webdriver.Firefox()
+# driver = webdriver.Firefox()
 
 # Navigate to the URL
 driver.get('https://www.kexp.org/playlist/')
