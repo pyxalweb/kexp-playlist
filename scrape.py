@@ -16,7 +16,7 @@ driver = webdriver.Firefox()
 driver.get('https://www.kexp.org/playlist/')
 
 # How many pages to scrape
-max_loops = 1
+max_loops = 25
 
 # Always start at 0
 loop_count = 0
