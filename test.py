@@ -4,6 +4,8 @@ from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 import time
 import re
+import spotipy
+from spotipy.oauth2 import SpotifyOAuth
 print('Dependencies imported successfully.')
 
 options = Options()
@@ -66,6 +68,17 @@ while loop_count < max_loops:
     
 driver.quit()
 print('Done scraping!')
-    
+
+#############################################
+# Import songs from CSV to Spotify Playlist #
+#############################################
+def add_to_spotify_playlist(playlist_id, csv_file_path, client_id, client_secret, redirect_uri, scope):
+    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id,
+                                                   client_secret=client_secret,
+                                                   redirect_uri=redirect_uri,
+                                                   scope=scope))
+    print('successfully loaded spotipy')
+
+add_to_spotify_playlist('6l04uhnCMeOjO3R1vLEkHW', combined_csv_file_path, os.environ['CLIENT_ID'], os.environ['CLIENT_SECRET'], 'http://127.0.0.1:8080', 'playlist-modify-public')
 
 print('The script has finished successfully!')
