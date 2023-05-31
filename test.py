@@ -18,7 +18,7 @@ print(f'We will scrape {max_loops} playlist page(s).')
 
 while loop_count < max_loops:
     try:
-        print('Waiting 5 seconds between playlist page(s)')
+        print('Waiting 5 seconds between playlist page(s).')
         time.sleep(5)
 
         page_source = driver.page_source
@@ -26,6 +26,11 @@ while loop_count < max_loops:
 
         soup = BeautifulSoup(page_source, 'html.parser')
         print('BeautifulSoup has parsed the HTML.')
+
+        # Find the parent div and extract the playlist items
+        parent_div = soup.find('div', id='playlist-plays')
+        playlist_items = parent_div.find_all('div', class_='PlaylistItem')
+        print('Found playlist items!')
 
         loop_count += 1
     except Exception as e:
