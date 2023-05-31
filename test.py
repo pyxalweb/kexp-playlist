@@ -80,6 +80,16 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
                                                    scope=scope))
     print('successfully loaded spotipy')
 
+    # Get the current songs in the playlist
+    current_songs = []
+    playlist = sp.playlist(playlist_id, fields="tracks,next")
+    tracks = playlist['tracks']
+    while tracks:
+        for item in tracks['items']:
+            current_songs.append((item['track']['name'], item['track']['artists'][0]['name']))
+        tracks = sp.next(tracks)
+    print(f'Current songs: {current_songs}')
+
 add_to_spotify_playlist('6l04uhnCMeOjO3R1vLEkHW', os.environ['CLIENT_ID'], os.environ['CLIENT_SECRET'], 'http://127.0.0.1:8080', 'playlist-modify-public')
 
 print('The script has finished successfully!')
