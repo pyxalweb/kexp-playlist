@@ -47,7 +47,7 @@ while loop_count < max_loops:
                 year = primary_content_div.find_all('div', class_='u-h5')[-1].get_text(strip=True)
                 if re.match('^2023', year):
                     items.append((track, artist))
-                    print('Appended track and artist to array')
+                    print(f'Appended {track} by {artist} to array')
 
         loop_count += 1
     except Exception as e:
