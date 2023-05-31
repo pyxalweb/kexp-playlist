@@ -70,6 +70,8 @@ while loop_count < max_loops:
 driver.quit()
 print('Done scraping!')
 
+print(f'Scraped the following tracks: {scrapedTracks}')
+
 #####################################
 # TODO: Import tracks to Spotify Playlist #
 #####################################
