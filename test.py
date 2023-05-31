@@ -21,7 +21,7 @@ max_loops = 1
 loop_count = 0
 print(f'We will scrape {max_loops} playlist page(s).')
 
-items = []
+scrapedTracks = []
 
 while loop_count < max_loops:
     try:
@@ -54,7 +54,7 @@ while loop_count < max_loops:
                 # If the year is matched, then proceed
                 if re.match('^2023', year):
                     # Add it to the array
-                    items.append((track, artist))
+                    scrapedTracks.append((track, artist))
                     print(f'Appended {track} by {artist} to array.')
 
         # Click the 'previous' link to go to the next playlist page
