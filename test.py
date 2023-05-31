@@ -15,3 +15,6 @@ print('5. successfully ran')
 
 driver.get('https://www.kexp.org/playlist/')
 print('6. successfully ran')
+
+page_source = driver.page_source
+print('Page source is now available')
