@@ -24,5 +24,10 @@ while loop_count < max_loops:
     try:
         print('Waiting 5 seconds between playlist page(s)')
         time.sleep(5)
+        loop_count += 1
+    except Exception as e:
+        print('Error:', e)
+        break
+    
 
 print('The script has finished successfully!')
