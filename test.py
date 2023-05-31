@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
+import time
 print('Dependencies imported successfully.')
 
 options = Options()
@@ -15,8 +16,13 @@ print('Selenium has the page source.')
 soup = BeautifulSoup(page_source, 'html.parser')
 print('BeautifulSoup has parsed the HTML.')
 
-print('The script has finished successfully!')
-
 max_loops = 1
 loop_count = 0
 print(f'We will scrape {max_loops} playlist page(s).')
+
+while loop_count < max_loops:
+    try:
+        print('Waiting 5 seconds between playlist page(s)')
+        time.sleep(5)
+
+print('The script has finished successfully!')
