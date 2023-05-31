@@ -6,6 +6,7 @@ import time
 import re
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
+import os
 print('Dependencies imported successfully.')
 
 options = Options()
