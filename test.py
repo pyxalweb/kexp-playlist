@@ -27,10 +27,15 @@ while loop_count < max_loops:
         soup = BeautifulSoup(page_source, 'html.parser')
         print('BeautifulSoup has parsed the HTML.')
 
-        # Find the parent div and extract the playlist items
+        # Find the parent div and child divs
         parent_div = soup.find('div', id='playlist-plays')
         playlist_items = parent_div.find_all('div', class_='PlaylistItem')
         print('Found playlist items!')
+
+        # Loop through the child divs
+        for playlist_item in playlist_items:
+            # Find the div which contains the track name, artist name, and year
+            primary_content_div = playlist_item.find('div', class_='PlaylistItem-primaryContent')
 
         loop_count += 1
     except Exception as e:
