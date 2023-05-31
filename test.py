@@ -36,6 +36,7 @@ while loop_count < max_loops:
         for playlist_item in playlist_items:
             # Find the div which contains the track name, artist name, and year
             primary_content_div = playlist_item.find('div', class_='PlaylistItem-primaryContent')
+            print('Found content within a playlist item.')
 
         loop_count += 1
     except Exception as e:
