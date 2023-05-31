@@ -71,31 +71,15 @@ driver.quit()
 print('Done scraping!')
 
 #####################################
-# Import tracks to Spotify Playlist #
+# TODO: Import tracks to Spotify Playlist #
 #####################################
-def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri, scope):
-    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id,
-                                                   client_secret=client_secret,
-                                                   redirect_uri=redirect_uri,
-                                                   scope=scope))
-    print('successfully loaded spotipy')
+#def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri, scope):
+#    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id,
+#                                                   client_secret=client_secret,
+#                                                   redirect_uri=redirect_uri,
+#                                                   scope=scope))
+#    print('successfully loaded spotipy')
 
-    results = sp.playlist_items(playlist_id)
-    
-    song_artist_array = []
-    
-    for item in results['items']:
-        track = item['track']
-        song_name = track['name']
-        
-        artists = track['artists']
-        artist_names = [artist['name'] for artist in artists]
-        
-        song_artist_array.append((song_name, artist_names))
-    
-    print(song_artist_array)
-    return song_artist_array
-
-add_to_spotify_playlist('6l04uhnCMeOjO3R1vLEkHW', os.environ['CLIENT_ID'], os.environ['CLIENT_SECRET'], 'http://127.0.0.1:8080', 'playlist-modify-public')
+#add_to_spotify_playlist('6l04uhnCMeOjO3R1vLEkHW', os.environ['CLIENT_ID'], os.environ['CLIENT_SECRET'], 'http://127.0.0.1:8080', 'playlist-modify-public')
 
 print('The script has finished successfully!')
