@@ -32,6 +32,9 @@ jobs:
           sudo chmod +x /usr/local/bin/chromedriver
 
       - name: Test script
+        env:
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
         run: python test.py 
 
 #      - name: Scrape KEXP playlist
