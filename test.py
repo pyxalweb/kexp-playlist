@@ -10,11 +10,7 @@ driver = webdriver.Chrome(options=options)
 print('Chrome WebDriver is ready.')
 
 driver.get('https://www.kexp.org/playlist/')
-page_source = driver.page_source
-print('Selenium has the page source.')
-
-soup = BeautifulSoup(page_source, 'html.parser')
-print('BeautifulSoup has parsed the HTML.')
+print('Selenium has the URL ready.')
 
 max_loops = 1
 loop_count = 0
@@ -24,6 +20,13 @@ while loop_count < max_loops:
     try:
         print('Waiting 5 seconds between playlist page(s)')
         time.sleep(5)
+
+        page_source = driver.page_source
+        print('Selenium has the page source.')
+
+        soup = BeautifulSoup(page_source, 'html.parser')
+        print('BeautifulSoup has parsed the HTML.')
+
         loop_count += 1
     except Exception as e:
         print('Error:', e)
