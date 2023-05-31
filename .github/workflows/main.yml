@@ -17,22 +17,31 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.x
+          python-version: 3.10.4
       
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install selenium beautifulsoup4 spotipy
-          pip install chromedriver-autoinstaller
+          
+      - name: Install ChromeDriver
+        run: |
+          wget https://chromedriver.storage.googleapis.com/113.0.5672.63/chromedriver_linux64.zip
+          unzip chromedriver_linux64.zip
+          sudo mv chromedriver /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chromedriver
 
-      - name: Scrape KEXP playlist
-        env:
-          CLIENT_ID: ${{ secrets.CLIENT_ID }}
-          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-        run: python scrape.py 
+      - name: Test script
+        run: python test.py 
+
+#      - name: Scrape KEXP playlist
+#        env:
+#          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+#          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+#        run: python scrape.py 
         
-      - name: Remove duplicates
-        env:
-          CLIENT_ID: ${{ secrets.CLIENT_ID }}
-          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-        run: python remove-spotify-dupes.py
+#      - name: Remove duplicates
+#        env:
+#          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+#          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+#        run: python remove-spotify-dupes.py
