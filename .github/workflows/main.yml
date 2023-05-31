@@ -31,14 +31,17 @@ jobs:
           sudo mv chromedriver /usr/local/bin/
           sudo chmod +x /usr/local/bin/chromedriver
 
-      - name: Scrape KEXP playlist
-        env:
-          CLIENT_ID: ${{ secrets.CLIENT_ID }}
-          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-        run: python scrape.py 
+      - name: Test script
+        run: python test.py 
+
+#      - name: Scrape KEXP playlist
+#        env:
+#          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+#          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+#        run: python scrape.py 
         
-      - name: Remove duplicates
-        env:
-          CLIENT_ID: ${{ secrets.CLIENT_ID }}
-          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-        run: python remove-spotify-dupes.py
+#      - name: Remove duplicates
+#        env:
+#          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+#          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+#        run: python remove-spotify-dupes.py
