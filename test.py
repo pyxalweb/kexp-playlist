@@ -14,7 +14,7 @@ print('Chrome WebDriver is ready.')
 driver.get('https://www.kexp.org/playlist/')
 print('Selenium has the URL ready.')
 
-max_loops = 3
+max_loops = 1
 loop_count = 0
 print(f'We will scrape {max_loops} playlist page(s).')
 
@@ -63,6 +63,9 @@ while loop_count < max_loops:
     except Exception as e:
         print('Error:', e)
         break
+    
+driver.quit()
+print('Done scraping!')
     
 
 print('The script has finished successfully!')
