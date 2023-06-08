@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup
 import time
 import re
 import spotipy
-from spotipy.oauth2 import SpotifyOAuth
 from spotipy.oauth2 import SpotifyClientCredentials
 import os
 print('Dependencies imported successfully.')
