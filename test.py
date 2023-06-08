@@ -5,8 +5,8 @@ from bs4 import BeautifulSoup
 import time
 import re
 import spotipy
-from spotipy.oauth2 import SpotifyOAuth
-from spotipy.oauth2 import SpotifyClientCredentials
+import spotipy
+import spotipy.util as util
 import os
 print('Dependencies imported successfully.')
 
@@ -84,35 +84,46 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret):
                                                     # redirect_uri=redirect_uri,
                                                     # scope=scope,
                                                     # requests_timeout=5))
-        auth_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret, scope='playlist-modify-private')
-        sp = spotipy.Spotify(auth_manager=auth_manager)
-        print('Successfully authenticated with Spotify.')
 
-        # Create a list to store the Spotify URIs of the tracks
-        track_uris = []
+        # Specify the desired scope for modifying private playlists
+        scope = 'playlist-modify-private'
 
-        # Iterate over the scraped tracks and search for them on Spotify
-        for track, artist in scrapedTracks:
-            # Search for the track on Spotify
-            results = sp.search(q=f'track:{track} artist:{artist}', type='track')
+        # Get an access token with the specified scope
+        token = util.prompt_for_user_token(client_id=client_id, client_secret=client_secret, scope=scope)
 
-            # Check if any results were found
-            if results['tracks']['items']:
-                # Get the URI of the first track in the search results
-                track_uri = results['tracks']['items'][0]['uri']
-                track_uris.append(track_uri)
-            else:
-                print(f'No matching track found on Spotify for: {track} by {artist}')
-            
-            # Close the connection after each API request
-            # sp._session.close()
+        if token:
+            sp = spotipy.Spotify(auth=token)
 
-            print('Waiting 5 seconds between API requests.')
-            time.sleep(5)
+            print('Successfully authenticated with Spotify.')
 
-        # Add the tracks to the Spotify playlist
-        sp.playlist_add_items(playlist_id, track_uris)
-        print('Tracks added to the Spotify playlist.')
+            # Create a list to store the Spotify URIs of the tracks
+            track_uris = []
+
+            # Iterate over the scraped tracks and search for them on Spotify
+            for track, artist in scrapedTracks:
+                # Search for the track on Spotify
+                results = sp.search(q=f'track:{track} artist:{artist}', type='track')
+
+                # Check if any results were found
+                if results['tracks']['items']:
+                    # Get the URI of the first track in the search results
+                    track_uri = results['tracks']['items'][0]['uri']
+                    track_uris.append(track_uri)
+                else:
+                    print(f'No matching track found on Spotify for: {track} by {artist}')
+                
+                # Close the connection after each API request
+                # sp._session.close()
+
+                print('Waiting 5 seconds between API requests.')
+                time.sleep(5)
+
+            # Add the tracks to the Spotify playlist
+            sp.playlist_add_items(playlist_id, track_uris)
+            print('Tracks added to the Spotify playlist.')
+        else:
+            print('Error obtaining Spotify access token.')
+
     except Exception as e:
         print('Error adding tracks to Spotify playlist:', e)
 
