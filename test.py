@@ -111,6 +111,7 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
         print('Error adding tracks to Spotify playlist:', e)
 
 # Call the function with your Spotify playlist ID, client ID, client secret, redirect URI, and scope
-add_to_spotify_playlist('6l04uhnCMeOjO3R1vLEkHW', os.environ['CLIENT_ID'], os.environ['CLIENT_SECRET'], 'http://127.0.0.1:8080', 'playlist-modify-public')
+# add_to_spotify_playlist('6l04uhnCMeOjO3R1vLEkHW', os.environ['CLIENT_ID'], os.environ['CLIENT_SECRET'], 'http://127.0.0.1:8080', 'playlist-modify-public')
+add_to_spotify_playlist('6l04uhnCMeOjO3R1vLEkHW', 'def5bfe912ce45a6ab7fe2ee46c24f1d', '739a0e3357e74bdd9732aec4bf885d9c', 'http://127.0.0.1:8080', 'playlist-modify-public')
 
 print('The script has finished successfully!')
