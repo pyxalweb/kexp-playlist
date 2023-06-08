@@ -104,7 +104,7 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
                 print(f'No matching track found on Spotify for: {track} by {artist}')
             
             # Close the connection after each API request
-            # sp._session.close()
+            sp._session.close()
 
             print('Waiting 5 seconds between API requests.')
             time.sleep(5)
