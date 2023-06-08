@@ -84,7 +84,8 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
                                                     scope=scope,
                                                     requests_session=True,
                                                     requests_timeout=None,
-                                                    cache_handler=None))
+                                                    cache_handler=None,
+                                                    show_requests=True))
         print('Successfully authenticated with Spotify.')
 
         # Create a list to store the Spotify URIs of the tracks
