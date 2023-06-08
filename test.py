@@ -6,6 +6,7 @@ import time
 import re
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
+from spotipy.oauth2 import SpotifyClientCredentials
 import os
 print('Dependencies imported successfully.')
 
@@ -78,11 +79,13 @@ print(f'Scraped the following tracks: {scrapedTracks}')
 def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri, scope):
     try:
         # Authenticate with Spotify
-        sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id,
-                                                    client_secret=client_secret,
-                                                    redirect_uri=redirect_uri,
-                                                    scope=scope,
-                                                    requests_timeout=5))
+        # sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id,
+                                                    # client_secret=client_secret,
+                                                    # redirect_uri=redirect_uri,
+                                                    # scope=scope,
+                                                    # requests_timeout=5))
+        auth_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
+        sp = spotipy.Spotify(auth_manager=auth_manager)
         print('Successfully authenticated with Spotify.')
 
         # Create a list to store the Spotify URIs of the tracks
@@ -115,5 +118,23 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
 
 # Call the function with your Spotify playlist ID, client ID, client secret, redirect URI, and scope
 add_to_spotify_playlist('6l04uhnCMeOjO3R1vLEkHW', os.environ['CLIENT_ID'], os.environ['CLIENT_SECRET'], 'http://127.0.0.1:8080', 'playlist-modify-public')
+
+print('The script has finished successfully!')
+
+
+
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
+
+def add_to_spotify_playlist(playlist_id, client_id, client_secret):
+    try:
+        auth_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
+        sp = spotipy.Spotify(auth_manager=auth_manager)
+        # Rest of the code...
+    except Exception as e:
+        print('Error adding tracks to Spotify playlist:', e)
+
+# Call the function with your Spotify playlist ID, client ID, and client secret
+add_to_spotify_playlist('6l04uhnCMeOjO3R1vLEkHW', os.environ['CLIENT_ID'], os.environ['CLIENT_SECRET'])
 
 print('The script has finished successfully!')
