@@ -75,13 +75,13 @@ print(f'Scraped the following tracks: {scrapedTracks}')
 #####################################
 # TODO: Import tracks to Spotify Playlist #
 #####################################
-#def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri, scope):
-#    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id,
-#                                                   client_secret=client_secret,
-#                                                   redirect_uri=redirect_uri,
-#                                                   scope=scope))
-#    print('successfully loaded spotipy')
+def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri, scope):
+   sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id,
+                                                  client_secret=client_secret,
+                                                  redirect_uri=redirect_uri,
+                                                  scope=scope))
+   print('successfully loaded spotipy')
 
-#add_to_spotify_playlist('6l04uhnCMeOjO3R1vLEkHW', os.environ['CLIENT_ID'], os.environ['CLIENT_SECRET'], 'http://127.0.0.1:8080', 'playlist-modify-public')
+add_to_spotify_playlist('6l04uhnCMeOjO3R1vLEkHW', os.environ['CLIENT_ID'], os.environ['CLIENT_SECRET'], 'http://127.0.0.1:8080', 'playlist-modify-public')
 
 print('The script has finished successfully!')
