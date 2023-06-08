@@ -103,6 +103,9 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
             # Close the connection after each API request
             sp._session.close()
 
+            print('Waiting 5 seconds between API requests.')
+            time.sleep(5)
+
         # Add the tracks to the Spotify playlist
         sp.playlist_add_items(playlist_id, track_uris)
         print('Tracks added to the Spotify playlist.')
