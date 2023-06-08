@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import time
 import re
 import spotipy
-from spotipy.oauth2 import SpotifyClientCredentials
+from spotipy.oauth2 import SpotifyOAuth
 import os
 print('Dependencies imported successfully.')
 
@@ -78,7 +78,10 @@ print(f'Scraped the following tracks: {scrapedTracks}')
 def add_to_spotify_playlist(playlist_id, client_id, client_secret):
     try:
         # Authenticate with Spotify
-        auth_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
+        auth_manager = SpotifyOAuth(client_id=client_id,
+                                    client_secret=client_secret,
+                                    redirect_uri='http://localhost:8888/callback',
+                                    scope='playlist-modify-public')
         sp = spotipy.Spotify(auth_manager=auth_manager)
         print('Successfully authenticated with Spotify.')
 
