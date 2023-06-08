@@ -76,36 +76,39 @@ print(f'Scraped the following tracks: {scrapedTracks}')
 # Import tracks to Spotify Playlist #
 #####################################
 def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri, scope):
-    # Authenticate with Spotify
-    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id,
-                                                   client_secret=client_secret,
-                                                   redirect_uri=redirect_uri,
-                                                   scope=scope))
-    print('Successfully authenticated with Spotify.')
+    try:
+        # Authenticate with Spotify
+        sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id,
+                                                    client_secret=client_secret,
+                                                    redirect_uri=redirect_uri,
+                                                    scope=scope))
+        print('Successfully authenticated with Spotify.')
 
-    # Get the username associated with the Spotify account
-    username = sp.current_user()["id"]
-    print(f"Username: {username}")
+        # Get the username associated with the Spotify account
+        username = sp.current_user()['id']
+        print(f'Username: {username}')
 
-    # Create a list to store the Spotify URIs of the tracks
-    track_uris = []
+        # Create a list to store the Spotify URIs of the tracks
+        track_uris = []
 
-    # Iterate over the scraped tracks and search for them on Spotify
-    for track, artist in scrapedTracks:
-        # Search for the track on Spotify
-        results = sp.search(q=f"track:{track} artist:{artist}", type="track")
+        # Iterate over the scraped tracks and search for them on Spotify
+        for track, artist in scrapedTracks:
+            # Search for the track on Spotify
+            results = sp.search(q=f'track:{track} artist:{artist}', type='track')
 
-        # Check if any results were found
-        if results["tracks"]["items"]:
-            # Get the URI of the first track in the search results
-            track_uri = results["tracks"]["items"][0]["uri"]
-            track_uris.append(track_uri)
-        else:
-            print(f"No matching track found on Spotify for: {track} by {artist}")
+            # Check if any results were found
+            if results['tracks']['items']:
+                # Get the URI of the first track in the search results
+                track_uri = results['tracks']['items'][0]['uri']
+                track_uris.append(track_uri)
+            else:
+                print(f'No matching track found on Spotify for: {track} by {artist}')
 
-    # Add the tracks to the Spotify playlist
-    sp.playlist_add_items(playlist_id, track_uris)
-    print("Tracks added to the Spotify playlist.")
+        # Add the tracks to the Spotify playlist
+        sp.playlist_add_items(playlist_id, track_uris)
+        print('Tracks added to the Spotify playlist.')
+    except Exception as e:
+        print('Error adding tracks to Spotify playlist:', e)
 
 # Call the function with your Spotify playlist ID, client ID, client secret, redirect URI, and scope
 add_to_spotify_playlist('6l04uhnCMeOjO3R1vLEkHW', os.environ['CLIENT_ID'], os.environ['CLIENT_SECRET'], 'http://127.0.0.1:8080', 'playlist-modify-public')
