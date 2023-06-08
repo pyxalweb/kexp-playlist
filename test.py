@@ -84,11 +84,27 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
                                                     scope=scope))
         print('Successfully authenticated with Spotify.')
 
-        # Get the username associated with the Spotify account
-        username = sp.current_user()['id']
-        print(f'Username: {username}')
+        print('test3')
 
-        print('test2')
+        # Create a list to store the Spotify URIs of the tracks
+        track_uris = []
+
+        # Iterate over the scraped tracks and search for them on Spotify
+        for track, artist in scrapedTracks:
+            # Search for the track on Spotify
+            results = sp.search(q=f'track:{track} artist:{artist}', type='track')
+
+            # Check if any results were found
+            if results['tracks']['items']:
+                # Get the URI of the first track in the search results
+                track_uri = results['tracks']['items'][0]['uri']
+                track_uris.append(track_uri)
+            else:
+                print(f'No matching track found on Spotify for: {track} by {artist}')
+
+        # Add the tracks to the Spotify playlist
+        sp.playlist_add_items(playlist_id, track_uris)
+        print('Tracks added to the Spotify playlist.')
     except Exception as e:
         print('Error adding tracks to Spotify playlist:', e)
 
