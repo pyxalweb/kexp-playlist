@@ -76,7 +76,7 @@ print(f'Scraped the following tracks: {scrapedTracks}')
 #####################################
 # Import tracks to Spotify Playlist #
 #####################################
-def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri, scope):
+def add_to_spotify_playlist(playlist_id, client_id, client_secret):
     try:
         # Authenticate with Spotify
         # sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id,
@@ -84,7 +84,7 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
                                                     # redirect_uri=redirect_uri,
                                                     # scope=scope,
                                                     # requests_timeout=5))
-        auth_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
+        auth_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret, scope='playlist-modify-private')
         sp = spotipy.Spotify(auth_manager=auth_manager)
         print('Successfully authenticated with Spotify.')
 
@@ -116,7 +116,7 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
     except Exception as e:
         print('Error adding tracks to Spotify playlist:', e)
 
-# Call the function with your Spotify playlist ID, client ID, client secret, redirect URI, and scope
-add_to_spotify_playlist('6l04uhnCMeOjO3R1vLEkHW', os.environ['CLIENT_ID'], os.environ['CLIENT_SECRET'], 'http://127.0.0.1:8080', 'playlist-modify-public')
+# Call the function with your Spotify playlist ID, client ID, and client secret
+add_to_spotify_playlist('6l04uhnCMeOjO3R1vLEkHW', os.environ['CLIENT_ID'], os.environ['CLIENT_SECRET'])
 
 print('The script has finished successfully!')
