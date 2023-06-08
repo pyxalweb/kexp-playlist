@@ -87,9 +87,10 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret):
 
         # Specify the desired scope for modifying private playlists
         scope = 'playlist-modify-private'
+        redirect_uri = 'http://127.0.0.1:8080'
 
         # Get an access token with the specified scope
-        token = util.prompt_for_user_token(client_id=client_id, client_secret=client_secret, scope=scope)
+        token = util.prompt_for_user_token(client_id=client_id, client_secret=client_secret, scope=scope, redirect_uri=redirect_uri)
 
         if token:
             sp = spotipy.Spotify(auth=token)
