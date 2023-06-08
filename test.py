@@ -77,7 +77,12 @@ print(f'Scraped the following tracks: {scrapedTracks}')
 #####################################
 def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri, scope):
     try:
-        print('test')
+        # Authenticate with Spotify
+        sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id,
+                                                    client_secret=client_secret,
+                                                    redirect_uri=redirect_uri,
+                                                    scope=scope))
+        print('test1')
     except Exception as e:
         print('Error adding tracks to Spotify playlist:', e)
 
