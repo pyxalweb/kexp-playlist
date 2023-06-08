@@ -123,8 +123,6 @@ print('The script has finished successfully!')
 
 
 
-import spotipy
-from spotipy.oauth2 import SpotifyClientCredentials
 
 def add_to_spotify_playlist(playlist_id, client_id, client_secret):
     try:
