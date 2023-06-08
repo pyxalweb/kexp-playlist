@@ -82,7 +82,13 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
                                                     client_secret=client_secret,
                                                     redirect_uri=redirect_uri,
                                                     scope=scope))
-        print('test1')
+        print('Successfully authenticated with Spotify.')
+
+        # Get the username associated with the Spotify account
+        username = sp.current_user()['id']
+        print(f'Username: {username}')
+
+        print('test2')
     except Exception as e:
         print('Error adding tracks to Spotify playlist:', e)
 
