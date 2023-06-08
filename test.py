@@ -120,19 +120,3 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
 add_to_spotify_playlist('6l04uhnCMeOjO3R1vLEkHW', os.environ['CLIENT_ID'], os.environ['CLIENT_SECRET'], 'http://127.0.0.1:8080', 'playlist-modify-public')
 
 print('The script has finished successfully!')
-
-
-
-
-def add_to_spotify_playlist(playlist_id, client_id, client_secret):
-    try:
-        auth_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
-        sp = spotipy.Spotify(auth_manager=auth_manager)
-        # Rest of the code...
-    except Exception as e:
-        print('Error adding tracks to Spotify playlist:', e)
-
-# Call the function with your Spotify playlist ID, client ID, and client secret
-add_to_spotify_playlist('6l04uhnCMeOjO3R1vLEkHW', os.environ['CLIENT_ID'], os.environ['CLIENT_SECRET'])
-
-print('The script has finished successfully!')
