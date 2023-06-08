@@ -83,7 +83,7 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret):
                                                     # redirect_uri=redirect_uri,
                                                     # scope=scope,
                                                     # requests_timeout=5))
-        auth_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret, scope='playlist-modify-private')
+        auth_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret, scope='playlist-modify-public', redirect_uri='http://127.0.0.1:8080')
         sp = spotipy.Spotify(auth_manager=auth_manager)
         print('Successfully authenticated with Spotify.')
 
