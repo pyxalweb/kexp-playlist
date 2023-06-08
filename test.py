@@ -76,7 +76,10 @@ print(f'Scraped the following tracks: {scrapedTracks}')
 # Import tracks to Spotify Playlist #
 #####################################
 def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri, scope):
-    print('test')
+    try:
+        print('test')
+    except Exception as e:
+        print('Error adding tracks to Spotify playlist:', e)
 
 # Call the function with your Spotify playlist ID, client ID, client secret, redirect URI, and scope
 add_to_spotify_playlist('6l04uhnCMeOjO3R1vLEkHW', os.environ['CLIENT_ID'], os.environ['CLIENT_SECRET'], 'http://127.0.0.1:8080', 'playlist-modify-public')
