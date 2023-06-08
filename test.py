@@ -81,7 +81,8 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
         sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id,
                                                     client_secret=client_secret,
                                                     redirect_uri=redirect_uri,
-                                                    scope=scope))
+                                                    scope=scope,
+                                                    show_requests=True))
         print('Successfully authenticated with Spotify.')
 
         # Create a list to store the Spotify URIs of the tracks
