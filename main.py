@@ -73,18 +73,29 @@ print('Done scraping!')
 print(f'Scraped the following tracks: {scrapedTracks}')
 
 #####################################
-# Import tracks to Spotify Playlist #
+# Spotify #
 #####################################
-def add_to_spotify_playlist(playlist_id, client_id, client_secret):
+def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri, scope,):
     try:
-        # Authenticate with Spotify
+        #####################################
+        # Authenticate with Spotify #
+        #####################################
+        cache_path = os.path.join('.cache', f'spotipy_{os.getpid()}')
+
         auth_manager = SpotifyOAuth(client_id=client_id,
                                     client_secret=client_secret,
-                                    redirect_uri='http://localhost:8888/callback',
-                                    scope='playlist-modify-public')
+                                    redirect_uri=redirect_uri,
+                                    scope=scope,
+                                    cache_path=cache_path)
         sp = spotipy.Spotify(auth_manager=auth_manager)
         print('Successfully authenticated with Spotify.')
+    except Exception as e:
+        print('Error authenticating with Spotify:', e)
 
+    try:
+        #####################################
+        # Import tracks to Spotify Playlist #
+        #####################################
         # Create a list to store the Spotify URIs of the tracks
         track_uris = []
 
@@ -113,7 +124,33 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret):
     except Exception as e:
         print('Error adding tracks to Spotify playlist:', e)
 
+    try:
+        #################################################
+        # Remove duplicate tracks from Spotify Playlist #
+        #################################################
+        all_tracks = []
+        playlist = sp.playlist(playlist_id, fields="tracks,next")
+        tracks = playlist['tracks']
+        while tracks:
+            for item in tracks['items']:
+                all_tracks.append((item['track']['name'], item['track']['artists'][0]['name'], item['track']['id']))
+            tracks = sp.next(tracks)
+
+        # Remove duplicate tracks from the playlist and add one instance of each track back to the playlist
+        duplicate_tracks = set([x for x in all_tracks if all_tracks.count(x) > 1])
+        if duplicate_tracks:
+            for track in duplicate_tracks:
+                track_ids_to_remove = [x[2] for x in all_tracks if x[0] == track[0] and x[1] == track[1]]
+                sp.playlist_remove_all_occurrences_of_items(playlist_id, track_ids_to_remove)
+                sp.playlist_add_items(playlist_id, [track[2]])
+                print (f"Removed duplicate(s) of {track[0]} by {track[1]} from the playlist. Waiting 5 seconds to avoid rate limiting.")
+                time.sleep(5)
+
+        print(f"Removed {len(duplicate_tracks)} duplicate tracks from the playlist.")
+    except Exception as e:
+        print('Error removing duplicate tracks from Spotify playlist:', e)
+
 # Call the function with your Spotify playlist ID, client ID, client secret, redirect URI, and scope
-add_to_spotify_playlist('6l04uhnCMeOjO3R1vLEkHW', os.environ['CLIENT_ID'], os.environ['CLIENT_SECRET'])
+add_to_spotify_playlist('6l04uhnCMeOjO3R1vLEkHW', os.environ['CLIENT_ID'], os.environ['CLIENT_SECRET'], 'http://localhost:8888/callback', 'playlist-modify-public')
 
 print('The script has finished successfully!')
