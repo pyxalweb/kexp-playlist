@@ -17,10 +17,9 @@ print('Chrome WebDriver is ready.')
 driver.get('https://www.kexp.org/playlist/')
 print('Selenium has the URL ready.')
 
-max_loops = 1
+max_loops = 20
 loop_count = 0
-print(f'Scraping {max_loops} playlist page(s).\n'
-      '---------------------------------------------------------------------------------------------------')
+print(f'Scraping {max_loops} playlist page(s).')
 
 scrapedTracks = []
 
@@ -29,7 +28,8 @@ while loop_count < max_loops:
         time.sleep(5)
 
         page_source = driver.page_source
-        print('Selenium has the page source.')
+        print('---------------------------------------------------------------------------------------------------\n'
+              'Selenium has the page source.')
 
         soup = BeautifulSoup(page_source, 'html.parser')
         print('BeautifulSoup has parsed the HTML.')
@@ -71,8 +71,7 @@ while loop_count < max_loops:
     
 driver.quit()
 
-print(f'Scraped the following tracks: {scrapedTracks}\n'
-      '---------------------------------------------------------------------------------------------------')
+print(f'Scraped the following tracks: {scrapedTracks}')
 
 #####################################
 # Spotify #
@@ -163,6 +162,6 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
         print('Error removing duplicate tracks from Spotify playlist:', e)
 
 # Call the function with your Spotify playlist ID, client ID, client secret, redirect URI, and scope
-add_to_spotify_playlist('6l04uhnCMeOjO3R1vLEkHW', os.environ['CLIENT_ID'], os.environ['CLIENT_SECRET'], 'http://localhost:8888/callback', 'playlist-modify-public')
+add_to_spotify_playlist('6l04uhnCMeOjO3R1vLEkHW', 'def5bfe912ce45a6ab7fe2ee46c24f1d', '3c34a655953647bc8a2d937b2b51735c', 'http://localhost:8888/callback', 'playlist-modify-public')
 
 print('The script has finished successfully!')
