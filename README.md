@@ -1,33 +1,19 @@
 # kexp-playlist
-Get a list of the most recent KEXP playlist in CSV format and then add the songs to a Spotify Playlist. Currently this is configured to only get the songs that are from the current year (2023) so that we can have a playlist of new music that KEXP is playing. A great tool for finding new music! Here is a link to the playlist:
-[https://open.spotify.com/playlist/0z6CpS8ikzUdmSeD54c4Ts?si=f63c5bc185704eeb](https://open.spotify.com/playlist/0z6CpS8ikzUdmSeD54c4Ts?si=f63c5bc185704eeb)
 
-The script cannot be headless (to my knowledge) and must use Selenium to open a browser window because the KEXP playlist is generated using Javascript and so we must wait for that to be populated within the DOM.
+## Infinite New Music Glitch!
 
-Once the browser is open, the script will create a CSV file within the 'outputs' directory with a filename that is set to the current date and time.
+This script will visit KEXP's Playlist page and add all tracks (song name, artist name) that were released in the current year to an array, which is then in turn added to a Spotify Playlist.
 
-The while loop will begin and run for as many loops as desired by the user. Each time it runs it will wait for a default of 5 seconds so that we do not overburden or abuse the KEXP web server.
+If the script runs daily and scrapes the entire days worth (approximately 20 pages) of tracks, then it should in theory be pretty good at automatically gathering new music. The user can then view the Spotify Playlist on a regular basis and cherry-pick their favorite songs, thus always being on the cutting edge.
 
-As mentioned above, the playlist data is populated by Javascript on the KEXP web page. So we must wait for Selenium to get the completed page source. Once it does then BeautifulSoup will be able to parse the playlist data which is contained within a div that has an id of 'playlist-plays'.
+## How Does it Work?
 
-For each playlist item, the script will check that it contains the following:
-- An h3 with a class of 'u-mb0' which represents the song title.
-- A div with a class of 'u-mb1' which represents the artist name.
-- A div with a class of 'u-h5' which represnts the publish year. NOTE: There are two divs with a class of 'u-h5' and we must get the last one only. We get the year because currently the script is configured to only get songs from X year as I am using this script to generate a playlist of songs that KEXP plays that are (new) from the current year. In the future this will be optional.
+The 'https://www.kexp.org/playlist/' page's Playlist content is dynamically generated. This means that we must use the Selenium library to get the HTML markup.
 
-If these elements exist, then it will write the song title and artist name to the CSV file. If these elements do not exist then it will skip the playlist item because it is not the desired data we want; ex: air breaks, advertisements, or other content that KEXP sometimes displays in the 'playlist-plays' div.
+We then use the BeautifulSoup library to parse through the HTML markup and find the appropriate content. Each track is contained within a div that has a class of '.PlaylistItem-primaryContent'. However the KEXP Playlist also uses this div and class name for other extraneous content such as advertisements, logging air breaks, etc. So we must be very specific in the HTML that we are looking to find. Additionally we only want tracks that have a publish date of the current year so we use a regular expression to ensure this.
 
-Once all of the items within the 'playlist-plays' div have been looped through then the script will look for a link at the bottom of the page that has an id of 'previous'. This clicks the 'Earlier' pagination link so that it can begin to loop through another page's 'playlist-plays' div. It will do this as many times as desired by the user in the 'max_loops' variable.
+Once the script has finished scraping the page then it will find the 'Earlier' link (pagination for the previous content) which is an anchor link that has an ID of '#previous'. This is clicked and the 'loop_count' is incremented. This will end only when the user defined 'max_loops' is reached.
 
-Finally the script will connect to the Spotify API via your playlist_id, client_id, and client_secret. All of which can be acquired by creating a Spotigy Developer account. It will then loop through the 'combined.csv' file found in the 'csv_file_path' location on your machine. It will then attempt to add each song from the CSV to a Spotify Playlist of your choice, waiting 5 seconds between each attempt so that we do not overburden or abuse the Spotify API.
+Next we authenticate with Spotify and prepare to add the tracks to the user defined Spotify Playlist ID. We're using the SpotifyOAuth class which supports the Spotify API's 'Client Authorization Code Flow' method. We iterate through the scraped tracks array and use Spotify's 'search' endpoint to see if the track exists on Spotify, if it does then we append that track URI to our new 'track-uris' array. Then finally we add that track to the Spotify Playlist.
 
-## Todo:
-TODO: Write a cron job to automatically run this python script at a specific time of day.
-
-TODO: Figure out what is causing the following errors to be printed to terminal when adding songs to the Spotify playlist. It seems to be a permissions issue. It's important to note however that the script is successfully adding the songs to the playlist despite these errors.
-"Couldn't write token to cache at: .cache"
-"Couldn't read cache at: .cache"
-
-TODO: Modify the script so that scraping songs from a specific year can easily be toggled on/off so that we can easily switch between scraping all songs or by year -- without having to manually edit the code.
-
-TODO: Add feature to skip scraping KEXP and creating CSV files, and just go directly to synching the CSV to Spotify. This may be helpful because I've encountered a case where I scrape 20 playlist pages (which takes approximately 1 minute and 40 seconds at 5 seconds per page) and then it proceeds to connect to Spotify, but I forgot to log in via the web browser, which then causes the script to fail. Now in order to continue, I have to run the script again and needlessly scrape the pages again or change the code to scrape only 1 page and have it continue. There may be other cases in the future where this could be useful.
+Lastly we want to remove any duplicate tracks. Maybe eventually I'll modify the script to check for an existing track before it adds it, but for now this is fine. The script will retrieve all of the tracks from the Spotify Playlist and then loop through each one, checking if the track exists more than once. If it does, then remove all instances of the track. Then add the track again.

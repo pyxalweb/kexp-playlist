@@ -80,6 +80,7 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
         #####################################
         # Authenticate with Spotify #
         #####################################
+        # This fixes the annoying cache notification in the CL
         cache_path = os.path.join('.cache', f'spotipy_{os.getpid()}')
 
         auth_manager = SpotifyOAuth(client_id=client_id,
@@ -88,6 +89,7 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
                                     scope=scope,
                                     cache_path=cache_path)
         sp = spotipy.Spotify(auth_manager=auth_manager)
+
         print('Successfully authenticated with Spotify.')
     except Exception as e:
         print('Error authenticating with Spotify:', e)
@@ -129,8 +131,12 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
         # Remove duplicate tracks from Spotify Playlist #
         #################################################
         all_tracks = []
+
+        # Retrieves tracks from Spotify playlist
         playlist = sp.playlist(playlist_id, fields="tracks,next")
         tracks = playlist['tracks']
+
+        # Get each track's name, artist, and ID. 
         while tracks:
             for item in tracks['items']:
                 all_tracks.append((item['track']['name'], item['track']['artists'][0]['name'], item['track']['id']))
