@@ -19,13 +19,13 @@ print('Selenium has the URL ready.')
 
 max_loops = 1
 loop_count = 0
-print(f'We will scrape {max_loops} playlist page(s).')
+print(f'Scraping {max_loops} playlist page(s).\n'
+      '---------------------------------------------------------------------------------------------------')
 
 scrapedTracks = []
 
 while loop_count < max_loops:
     try:
-        print('Waiting 5 seconds between playlist page(s).')
         time.sleep(5)
 
         page_source = driver.page_source
@@ -55,7 +55,9 @@ while loop_count < max_loops:
                 if re.match('^2023', year):
                     # Add it to the array
                     scrapedTracks.append((track, artist))
-                    print(f'Appended {track} by {artist} to array.')
+                    print('******************************************************************\n'
+                    f'Added {track} by {artist} to array.\n'
+                    '******************************************************************')
 
         # Click the 'previous' link to go to the next playlist page
         previous_link = driver.find_element(By.ID, "previous")
@@ -68,9 +70,9 @@ while loop_count < max_loops:
         break
     
 driver.quit()
-print('Done scraping!')
 
-print(f'Scraped the following tracks: {scrapedTracks}')
+print(f'Scraped the following tracks: {scrapedTracks}\n'
+      '---------------------------------------------------------------------------------------------------')
 
 #####################################
 # Spotify #
@@ -111,18 +113,21 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
                 # Get the URI of the first track in the search results
                 track_uri = results['tracks']['items'][0]['uri']
                 track_uris.append(track_uri)
+                print('******************************************************************\n'
+                    f'Added {track} to Spotify Playlist\n'
+                    '******************************************************************')
             else:
                 print(f'No matching track found on Spotify for: {track} by {artist}')
             
             # Close the connection after each API request
             # sp._session.close()
 
-            print('Waiting 5 seconds between API requests.')
             time.sleep(5)
 
         # Add the tracks to the Spotify playlist
         sp.playlist_add_items(playlist_id, track_uris)
-        print('Tracks added to the Spotify playlist.')
+        print('Finished adding tracks to the Spotify playlist.\n'
+        '---------------------------------------------------------------------------------------------------')
     except Exception as e:
         print('Error adding tracks to Spotify playlist:', e)
 
@@ -149,10 +154,11 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
                 track_ids_to_remove = [x[2] for x in all_tracks if x[0] == track[0] and x[1] == track[1]]
                 sp.playlist_remove_all_occurrences_of_items(playlist_id, track_ids_to_remove)
                 sp.playlist_add_items(playlist_id, [track[2]])
-                print (f"Removed duplicate(s) of {track[0]} by {track[1]} from the playlist. Waiting 5 seconds to avoid rate limiting.")
+                print (f"Removed duplicate(s) of {track[0]} by {track[1]} from the playlist.")
                 time.sleep(5)
 
-        print(f"Removed {len(duplicate_tracks)} duplicate tracks from the playlist.")
+        print('---------------------------------------------------------------------------------------------------\n'
+              f"Removed {len(duplicate_tracks)} duplicate tracks from the playlist.")
     except Exception as e:
         print('Error removing duplicate tracks from Spotify playlist:', e)
 
