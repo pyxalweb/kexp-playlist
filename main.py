@@ -13,7 +13,7 @@ colorama.init()
 print('Dependencies imported successfully')
 
 options = Options()
-options.add_argument("--headless")
+options.add_argument('--headless')
 driver = webdriver.Chrome(options=options)
 print('Chrome WebDriver is ready')
 
@@ -71,7 +71,7 @@ while loop_count <= max_loops:
         print(colorama.Fore.CYAN + f'Total tracks scraped: {scraped_count}.' + colorama.Style.RESET_ALL)
 
         # Click the 'previous' link to go to the next playlist page
-        previous_link = driver.find_element(By.ID, "previous")
+        previous_link = driver.find_element(By.ID, 'previous')
         previous_link.click()
 
         # Add 1 to the loop_count
@@ -149,7 +149,7 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
         all_tracks = []
 
         # Retrieves tracks from Spotify playlist
-        playlist = sp.playlist(playlist_id, fields="tracks,next")
+        playlist = sp.playlist(playlist_id, fields='tracks,next')
         tracks = playlist['tracks']
 
         # Get each track's name, artist, and ID. 
@@ -165,10 +165,10 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
                 track_ids_to_remove = [x[2] for x in all_tracks if x[0] == track[0] and x[1] == track[1]]
                 sp.playlist_remove_all_occurrences_of_items(playlist_id, track_ids_to_remove)
                 sp.playlist_add_items(playlist_id, [track[2]])
-                print (f"Removed duplicate(s) of {track[0]} by {track[1]} from the playlist.")
+                print (colorama.Fore.YELLOW + f'{track[0]} by {track[1]} duplicate tracks removed from Spotify Playlist' + colorama.Style.RESET_ALL)
                 time.sleep(5)
 
-        print(f'Removed {len(duplicate_tracks)} duplicate tracks from the playlist')
+        print(f'{len(duplicate_tracks)} duplicate tracks removed from Spotify Playlist')
     except Exception as e:
         print('Error removing duplicate tracks from Spotify playlist:', e)
 
