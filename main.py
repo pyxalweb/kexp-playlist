@@ -168,7 +168,7 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
                 print (colorama.Fore.YELLOW + f'{track[0]} by {track[1]} duplicate tracks removed from Spotify Playlist' + colorama.Style.RESET_ALL)
                 time.sleep(5)
 
-        print(f'{len(duplicate_tracks)} duplicate tracks removed from Spotify Playlist')
+        print(colorama.Fore.CYAN + f'{len(duplicate_tracks)} duplicate tracks removed from Spotify Playlist' + colorama.Style.RESET_ALL)
     except Exception as e:
         print('Error removing duplicate tracks from Spotify playlist:', e)
 
