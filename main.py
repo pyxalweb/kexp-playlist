@@ -10,19 +10,19 @@ import os
 import colorama
 
 colorama.init()
-print('Dependencies imported successfully.')
+print('Dependencies imported successfully')
 
 options = Options()
 options.add_argument("--headless")
 driver = webdriver.Chrome(options=options)
-print('Chrome WebDriver is ready.')
+print('Chrome WebDriver is ready')
 
 driver.get('https://www.kexp.org/playlist/')
-print('Selenium has the URL ready.')
+print('Selenium has the URL ready')
 
-max_loops = 8
+max_loops = 3
 loop_count = 1
-print(f'Scraping {max_loops} playlist page(s).')
+print(f'Scraping {max_loops} playlist page(s)')
 
 scraped_count = 0
 
@@ -31,18 +31,18 @@ scraped_tracks = []
 # loop through each KEXP Playlist page
 while loop_count <= max_loops:
     try:
-        print(colorama.Fore.CYAN + f'Page {loop_count} of {max_loops}.'  + colorama.Style.RESET_ALL)
+        print(colorama.Fore.MAGENTA + f'Page {loop_count} of {max_loops}.'  + colorama.Style.RESET_ALL)
 
         page_source = driver.page_source
-        print('Selenium has the page source.')
+        print('Selenium has the page source')
 
         soup = BeautifulSoup(page_source, 'html.parser')
-        print('BeautifulSoup has parsed the HTML.')
+        print('BeautifulSoup has parsed the HTML')
 
         # Find the parent div and child divs
         parent_div = soup.find('div', id='playlist-plays')
         playlist_items = parent_div.find_all('div', class_='PlaylistItem')
-        print('Found playlist items!')
+        print('Found playlist items')
 
         tracks_per_page_count = 0
 
@@ -63,12 +63,12 @@ while loop_count <= max_loops:
                     scraped_tracks.append((track, artist))
                     scraped_count += 1
                     tracks_per_page_count += 1
-                    print(colorama.Fore.GREEN + f'Added {track} by {artist} to array.' + colorama.Style.RESET_ALL)
+                    print(colorama.Fore.GREEN + f'{track} by {artist} added to array' + colorama.Style.RESET_ALL)
 
         if tracks_per_page_count == 0:
-            print (colorama.Fore.RED + 'None of the playlist items were songs from 2023' + colorama.Style.RESET_ALL)
+            print (colorama.Fore.RED + 'None of the playlist items were tracks from 2023' + colorama.Style.RESET_ALL)
 
-        print(f'Total tracks scraped: {scraped_count}.')
+        print(colorama.Fore.CYAN + f'Total tracks scraped: {scraped_count}.' + colorama.Style.RESET_ALL)
 
         # Click the 'previous' link to go to the next playlist page
         previous_link = driver.find_element(By.ID, "previous")
@@ -84,7 +84,7 @@ while loop_count <= max_loops:
     
 driver.quit()
 
-print(f'Scraped the following tracks: {scraped_tracks}')
+print('Finished scraping tracks from KEXP Playlist page(s)')
 
 #####################################
 # Spotify #
@@ -104,7 +104,7 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
                                     cache_path=cache_path)
         sp = spotipy.Spotify(auth_manager=auth_manager)
 
-        print('Successfully authenticated with Spotify.')
+        print('Successfully authenticated with Spotify')
     except Exception as e:
         print('Error authenticating with Spotify:', e)
 
@@ -112,6 +112,8 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
         #####################################
         # Import tracks to Spotify Playlist #
         #####################################
+        added_count = 1
+
         # Create a list to store the Spotify URIs of the tracks
         track_uris = []
 
@@ -125,21 +127,18 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
                 # Get the URI of the first track in the search results
                 track_uri = results['tracks']['items'][0]['uri']
                 track_uris.append(track_uri)
-                print('******************************************************************\n'
-                    f'Added {track} to Spotify Playlist\n'
-                    '******************************************************************')
+                print(colorama.Fore.GREEN + f'{track} by {artist} added to Spotify Playlist' + colorama.Style.RESET_ALL)
             else:
-                print(f'No matching track found on Spotify for: {track} by {artist}')
+                print(colorama.Fore.RED + f'No matching track found on Spotify for: {track} by {artist}' + colorama.Style.RESET_ALL)
             
-            scraped_count -= 1
-            print(f'Total tracks left to add: {scraped_count}.')
+            print(colorama.Fore.CYAN + f'{added_count} of {scraped_count}' + colorama.Style.RESET_ALL)
+            added_count += 1
 
             time.sleep(5)
 
         # Add the tracks to the Spotify playlist
         sp.playlist_add_items(playlist_id, track_uris)
-        print('Finished adding tracks to the Spotify playlist.\n'
-        '---------------------------------------------------------------------------------------------------')
+        print('Finished adding tracks to the Spotify playlist')
     except Exception as e:
         print('Error adding tracks to Spotify playlist:', e)
 
@@ -169,13 +168,12 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
                 print (f"Removed duplicate(s) of {track[0]} by {track[1]} from the playlist.")
                 time.sleep(5)
 
-        print('---------------------------------------------------------------------------------------------------\n'
-              f"Removed {len(duplicate_tracks)} duplicate tracks from the playlist.")
+        print(f'Removed {len(duplicate_tracks)} duplicate tracks from the playlist')
     except Exception as e:
         print('Error removing duplicate tracks from Spotify playlist:', e)
 
 # Call the function with your Spotify playlist ID, client ID, client secret, redirect URI, and scope
 add_to_spotify_playlist('0z6CpS8ikzUdmSeD54c4Ts', os.environ['CLIENT_ID'], os.environ['CLIENT_SECRET'], 'http://localhost:8888/callback', 'playlist-modify-public', scraped_count)
 
-print('The script has finished successfully!')
+print('The script has successfully finished!')
 colorama.deinit()
