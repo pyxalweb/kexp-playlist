@@ -7,6 +7,9 @@ import re
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import os
+import colorama
+
+colorama.init()
 print('Dependencies imported successfully.')
 
 options = Options()
@@ -17,22 +20,21 @@ print('Chrome WebDriver is ready.')
 driver.get('https://www.kexp.org/playlist/')
 print('Selenium has the URL ready.')
 
-max_loops = 5
+max_loops = 8
 loop_count = 1
 print(f'Scraping {max_loops} playlist page(s).')
 
 scraped_count = 0
 
-scrapedTracks = []
+scraped_tracks = []
 
+# loop through each KEXP Playlist page
 while loop_count <= max_loops:
     try:
-        time.sleep(5)
+        print(colorama.Fore.CYAN + f'Page {loop_count} of {max_loops}.'  + colorama.Style.RESET_ALL)
 
         page_source = driver.page_source
-        print('---------------------------------------------------------------------------------------------------\n'
-              f'Page {loop_count} of {max_loops}.\n'
-              'Selenium has the page source.')
+        print('Selenium has the page source.')
 
         soup = BeautifulSoup(page_source, 'html.parser')
         print('BeautifulSoup has parsed the HTML.')
@@ -42,11 +44,12 @@ while loop_count <= max_loops:
         playlist_items = parent_div.find_all('div', class_='PlaylistItem')
         print('Found playlist items!')
 
+        tracks_per_page_count = 0
+
         # Loop through the child divs
         for playlist_item in playlist_items:
             # Find the div which contains the track name, artist name, and year
             primary_content_div = playlist_item.find('div', class_='PlaylistItem-primaryContent')
-            print('Found content within a playlist item.')
 
             # If the 'PlaylistItem-primaryContent' div does not contain the appropriate text (track name, artist name, year) then it is likely a sponsor, air break, etc and should be skipped
             if primary_content_div.find('h3', class_='u-mb0' != None) and (primary_content_div.find('div', class_='u-mb1') != None) and (primary_content_div.find_all('div', class_='u-h5') != []):
@@ -57,11 +60,14 @@ while loop_count <= max_loops:
                 # If the year is matched, then proceed
                 if re.match('^2023', year):
                     # Add it to the array
-                    scrapedTracks.append((track, artist))
+                    scraped_tracks.append((track, artist))
                     scraped_count += 1
-                    print('******************************************************************\n'
-                    f'Added {track} by {artist} to array.\n'
-                    '******************************************************************')
+                    tracks_per_page_count += 1
+                    print(colorama.Fore.GREEN + f'Added {track} by {artist} to array.' + colorama.Style.RESET_ALL)
+
+        if tracks_per_page_count == 0:
+            print (colorama.Fore.RED + 'None of the playlist items were songs from 2023' + colorama.Style.RESET_ALL)
+
         print(f'Total tracks scraped: {scraped_count}.')
 
         # Click the 'previous' link to go to the next playlist page
@@ -70,13 +76,15 @@ while loop_count <= max_loops:
 
         # Add 1 to the loop_count
         loop_count += 1
+
+        time.sleep(5)
     except Exception as e:
         print('Error:', e)
         break
     
 driver.quit()
 
-print(f'Scraped the following tracks: {scrapedTracks}')
+print(f'Scraped the following tracks: {scraped_tracks}')
 
 #####################################
 # Spotify #
@@ -108,7 +116,7 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
         track_uris = []
 
         # Iterate over the scraped tracks and search for them on Spotify
-        for track, artist in scrapedTracks:
+        for track, artist in scraped_tracks:
             # Search for the track on Spotify
             results = sp.search(q=f'track:{track} artist:{artist}', type='track')
 
@@ -170,3 +178,4 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
 add_to_spotify_playlist('0z6CpS8ikzUdmSeD54c4Ts', os.environ['CLIENT_ID'], os.environ['CLIENT_SECRET'], 'http://localhost:8888/callback', 'playlist-modify-public', scraped_count)
 
 print('The script has finished successfully!')
+colorama.deinit()
