@@ -17,18 +17,21 @@ print('Chrome WebDriver is ready.')
 driver.get('https://www.kexp.org/playlist/')
 print('Selenium has the URL ready.')
 
-max_loops = 20
-loop_count = 0
+max_loops = 5
+loop_count = 1
 print(f'Scraping {max_loops} playlist page(s).')
+
+scraped_count = 0
 
 scrapedTracks = []
 
-while loop_count < max_loops:
+while loop_count <= max_loops:
     try:
         time.sleep(5)
 
         page_source = driver.page_source
         print('---------------------------------------------------------------------------------------------------\n'
+              f'Page {loop_count} of {max_loops}.\n'
               'Selenium has the page source.')
 
         soup = BeautifulSoup(page_source, 'html.parser')
@@ -55,9 +58,11 @@ while loop_count < max_loops:
                 if re.match('^2023', year):
                     # Add it to the array
                     scrapedTracks.append((track, artist))
+                    scraped_count += 1
                     print('******************************************************************\n'
                     f'Added {track} by {artist} to array.\n'
                     '******************************************************************')
+        print(f'Total tracks scraped: {scraped_count}.')
 
         # Click the 'previous' link to go to the next playlist page
         previous_link = driver.find_element(By.ID, "previous")
@@ -76,7 +81,7 @@ print(f'Scraped the following tracks: {scrapedTracks}')
 #####################################
 # Spotify #
 #####################################
-def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri, scope,):
+def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri, scope, scraped_count):
     try:
         #####################################
         # Authenticate with Spotify #
@@ -118,8 +123,8 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
             else:
                 print(f'No matching track found on Spotify for: {track} by {artist}')
             
-            # Close the connection after each API request
-            # sp._session.close()
+            scraped_count -= 1
+            print(f'Total tracks left to add: {scraped_count}.')
 
             time.sleep(5)
 
@@ -162,6 +167,6 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
         print('Error removing duplicate tracks from Spotify playlist:', e)
 
 # Call the function with your Spotify playlist ID, client ID, client secret, redirect URI, and scope
-add_to_spotify_playlist('6l04uhnCMeOjO3R1vLEkHW', 'def5bfe912ce45a6ab7fe2ee46c24f1d', '3c34a655953647bc8a2d937b2b51735c', 'http://localhost:8888/callback', 'playlist-modify-public')
+add_to_spotify_playlist('0z6CpS8ikzUdmSeD54c4Ts', os.environ['CLIENT_ID'], os.environ['CLIENT_SECRET'], 'http://localhost:8888/callback', 'playlist-modify-public', scraped_count)
 
 print('The script has finished successfully!')
