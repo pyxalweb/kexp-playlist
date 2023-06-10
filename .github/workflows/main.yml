@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install selenium beautifulsoup4 spotipy
+          pip install selenium beautifulsoup4 spotipy colorama
           
       - name: Install ChromeDriver
         run: |
@@ -36,15 +36,3 @@ jobs:
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
         run: python test.py 
-
-#      - name: Scrape KEXP playlist
-#        env:
-#          CLIENT_ID: ${{ secrets.CLIENT_ID }}
-#          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-#        run: python scrape.py 
-        
-#      - name: Remove duplicates
-#        env:
-#          CLIENT_ID: ${{ secrets.CLIENT_ID }}
-#          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-#        run: python remove-spotify-dupes.py
