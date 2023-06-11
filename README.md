@@ -26,7 +26,7 @@ This means that in order to run this script on a Raspberry Pi you must uncomment
 
 Uncomment the following lines:
 ```
-from selenium.webdriver.chrome.service import Service`
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver import Chrome
 ```
 

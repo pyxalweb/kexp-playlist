@@ -9,6 +9,9 @@ from spotipy.oauth2 import SpotifyOAuth
 import os
 import colorama
 
+# use the following if running in a cron job script:
+os.environ['DISPLAY'] = ':0'
+
 # use the following on 32-Bit ARM Raspberry Pi only:
 # from selenium.webdriver.chrome.service import Service
 # from selenium.webdriver import Chrome
