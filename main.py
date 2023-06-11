@@ -9,16 +9,29 @@ from spotipy.oauth2 import SpotifyOAuth
 import os
 import colorama
 
-colorama.init()
+# use the following on 32-Bit ARM Raspberry Pi only:
+# from selenium.webdriver.chrome.service import Service
+# from selenium.webdriver import Chrome
+
 print('Dependencies imported successfully')
 
+# run Chrome/Chromium as a headless browser
 options = Options()
 options.add_argument('--headless')
+
+# comment out the following on 32-Bit ARM Raspberry Pi only:
 driver = webdriver.Chrome(options=options)
+
+# use the following on 32-Bit ARM Raspberry Pi only:
+# service = Service('/usr/lib/chromium-browser/chromedriver')
+# driver = Chrome(service=service, options=options)
+
 print('Chrome WebDriver is ready')
 
 driver.get('https://www.kexp.org/playlist/')
 print('Selenium has the URL ready')
+
+colorama.init()
 
 max_loops = 3
 loop_count = 1

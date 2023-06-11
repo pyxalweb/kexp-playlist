@@ -18,6 +18,32 @@ Next we authenticate with Spotify and prepare to add the Tracks to the user defi
 
 Lastly we want to remove any duplicate Tracks. Maybe eventually I'll modify the script to check for an existing Track before it adds it, but for now this is fine. The script will retrieve all of the Tracks from the Spotify Playlist and then loop through each one, checking if the Track exists more than once. If it does, then remove all instances of the Track. Then add the Track again.
 
+## Raspberry Pi Usage:
+
+The script was initially designed to have the Selenium library use the Chrome browser. Throughout the project's development I decided to schedule a cron to run the script daily on a Raspberry Pi. While configuring this, it came to my attention that Chrome is no longer supported on 32-Bit ARM hardware which is what the Raspberry Pi 2 Model B uses. However this [Selenium ChromeDriver on RaspberryPi article](https://ivanderevianko.com/2020/01/selenium-chromedriver-for-raspberrypi) informed me that the Raspbian team had compiled a 'chromium-chromedriver' executable that we can use instead!
+
+This means that in order to run this script on a Raspberry Pi you must uncomment/comment a few lines in order to switch from the Chrome webdriver to the Chromium webdriver.
+
+Uncomment the following lines:
+```
+from selenium.webdriver.chrome.service import Service`
+from selenium.webdriver import Chrome
+```
+
+And these too:
+```
+service = Service('/usr/lib/chromium-browser/chromedriver')
+driver = Chrome(service=service)
+```
+
+Then comment out these:
+```
+options = Options()
+options.add_argument('--headless')
+driver = webdriver.Chrome(options=options)
+```
+
+
 ## Todo:
 
 * Currently the script does not check if the Track already exists in the Playlist or not. After it finishes adding all Tracks, then it checks for and removes any duplicates. It does this by removing all Tracks that occur more than once, and then adds one instance of the Track back again. This is a waste of resources. A better solution would be to check if the Track exists in the Playlist before it adds it, if it exists then it is skipped and if it does not exist then it adds it.
