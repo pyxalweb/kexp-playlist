@@ -43,6 +43,13 @@ options.add_argument('--headless')
 driver = webdriver.Chrome(options=options)
 ```
 
+## Crontab
+
+Open the terminal and enter `cronttab -e` to edit the crontab file. Then enter the following, editing the paths as needed:
+```
+20 4 * * * /usr/bin/python3 /home/alex/python/main.py > /home/alex/python/cron-$(date +\%Y-\%m-\%d-\%H-\%M).log 2>&1
+```
+This will run the script every day at 4:20am and save a log file to show the output.
 
 ## Todo:
 
