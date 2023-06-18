@@ -1,3 +1,20 @@
+"""
+Script Name: KEXP to Spotify by Year
+Author: Alex Winter
+Version: 1.0
+Description: This script will visit KEXP's Playlist page and add all Tracks (song name, artist name) that were released in the current year to an array, which is then in turn added to a Spotify Playlist. If the script runs daily and scrapes the entire day's worth (approximately 20 pages) of Tracks, then it should in theory be pretty good at automatically gathering new music. The user can then manually view the Spotify Playlist on a regular basis and cherry-pick their favorite songs, thus always being on the cutting edge.
+
+Usage:
+    - Run the script with Python 3.x
+    - Dependencies: selenium, beautifulsoup4, spotipy, colorama
+    - Set the max_loops variable to determine how many Playlist pages to scrape (ex: 20)
+    - Set the year (ex: 2023)
+    - Set your Spotify playlist ID (this can be found in the URL of your Spotify Playlist)
+    - Set your client ID, client secret (this can be generated at developer.spotify.com)
+
+Author's Note: Please consider donating to KEXP as they are a non-commercial radio station and a non-profit entity that can only function with your support. I understand that Spotify is in some ways the antithesis to KEXP. However it is a useful tool that allows me to easily organize and arrange music playlists. This script was created for fun and there is no intention otherwise.
+"""
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
