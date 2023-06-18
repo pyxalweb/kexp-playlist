@@ -1,7 +1,7 @@
 """
 Script Name: KEXP to Spotify by Year
 Author: Alex Winter
-Version: 1.0
+Version: 1.1
 Description: This script will visit KEXP's Playlist page and add all Tracks (song name, artist name) that were released in the current year to an array, which is then in turn added to a Spotify Playlist. If the script runs daily and scrapes the entire day's worth (approximately 20 pages) of Tracks, then it should in theory be pretty good at automatically gathering new music. The user can then manually view the Spotify Playlist on a regular basis and cherry-pick their favorite songs, thus always being on the cutting edge.
 
 Usage:
@@ -53,7 +53,7 @@ print('Selenium has the URL ready')
 
 colorama.init()
 
-max_loops = 3
+max_loops = 5
 loop_count = 1
 print(f'Scraping {max_loops} playlist page(s)')
 
@@ -61,7 +61,9 @@ scraped_count = 0
 
 scraped_tracks = []
 
-# loop through each KEXP Playlist page
+#####################################
+# Scrape KEXP Playlist pages #
+#####################################
 while loop_count <= max_loops:
     try:
         print(colorama.Fore.MAGENTA + f'Page {loop_count} of {max_loops}.'  + colorama.Style.RESET_ALL)
@@ -122,6 +124,14 @@ print('Finished scraping tracks from KEXP Playlist page(s)')
 #####################################
 # Spotify #
 #####################################
+
+# Function which checks if the track already exists in the playlist
+def is_track_in_playlist(sp, playlist_id, track_uri):
+    playlist_items = sp.playlist_items(playlist_id, fields='items(track(uri))')['items']
+    track_uris = [item['track']['uri'] for item in playlist_items]
+    return track_uri in track_uris
+
+# Function which adds tracks to the Spotify Playlist
 def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri, scope, scraped_count):
     try:
         #####################################
@@ -154,56 +164,28 @@ def add_to_spotify_playlist(playlist_id, client_id, client_secret, redirect_uri,
         for track, artist in scraped_tracks:
             # Search for the track on Spotify
             results = sp.search(q=f'track:{track} artist:{artist}', type='track')
-
+            
             # Check if any results were found
             if results['tracks']['items']:
                 # Get the URI of the first track in the search results
                 track_uri = results['tracks']['items'][0]['uri']
-                track_uris.append(track_uri)
-                print(colorama.Fore.GREEN + f'{track} by {artist} added to Spotify Playlist' + colorama.Style.RESET_ALL)
+                # Check if the track already exists in the Playlist
+                if not is_track_in_playlist(sp, playlist_id, track_uri):
+                    sp.playlist_add_items(playlist_id, [track_uri])
+                    print(colorama.Fore.GREEN + f'{track} by {artist} added to Spotify Playlist' + colorama.Style.RESET_ALL)
+                else:
+                    print(colorama.Fore.YELLOW + f'{track} by {artist} already exists in the Spotify Playlist' + colorama.Style.RESET_ALL)
             else:
                 print(colorama.Fore.RED + f'No matching track found on Spotify for: {track} by {artist}' + colorama.Style.RESET_ALL)
-            
+
             print(colorama.Fore.CYAN + f'{added_count} of {scraped_count}' + colorama.Style.RESET_ALL)
             added_count += 1
 
             time.sleep(5)
 
-        # Add the tracks to the Spotify playlist
-        sp.playlist_add_items(playlist_id, track_uris)
         print('Finished adding tracks to the Spotify playlist')
     except Exception as e:
         print('Error adding tracks to Spotify playlist:', e)
-
-    try:
-        #################################################
-        # Remove duplicate tracks from Spotify Playlist #
-        #################################################
-        all_tracks = []
-
-        # Retrieves tracks from Spotify playlist
-        playlist = sp.playlist(playlist_id, fields='tracks,next')
-        tracks = playlist['tracks']
-
-        # Get each track's name, artist, and ID. 
-        while tracks:
-            for item in tracks['items']:
-                all_tracks.append((item['track']['name'], item['track']['artists'][0]['name'], item['track']['id']))
-            tracks = sp.next(tracks)
-
-        # Remove duplicate tracks from the playlist and add one instance of each track back to the playlist
-        duplicate_tracks = set([x for x in all_tracks if all_tracks.count(x) > 1])
-        if duplicate_tracks:
-            for track in duplicate_tracks:
-                track_ids_to_remove = [x[2] for x in all_tracks if x[0] == track[0] and x[1] == track[1]]
-                sp.playlist_remove_all_occurrences_of_items(playlist_id, track_ids_to_remove)
-                sp.playlist_add_items(playlist_id, [track[2]])
-                print (colorama.Fore.YELLOW + f'{track[0]} by {track[1]} duplicate tracks removed from Spotify Playlist' + colorama.Style.RESET_ALL)
-                time.sleep(5)
-
-        print(colorama.Fore.CYAN + f'{len(duplicate_tracks)} duplicate tracks removed from Spotify Playlist' + colorama.Style.RESET_ALL)
-    except Exception as e:
-        print('Error removing duplicate tracks from Spotify playlist:', e)
 
 # Call the function with your Spotify playlist ID, client ID, client secret, redirect URI, and scope
 add_to_spotify_playlist('0z6CpS8ikzUdmSeD54c4Ts', os.environ['CLIENT_ID'], os.environ['CLIENT_SECRET'], 'http://localhost:8888/callback', 'playlist-modify-public', scraped_count)
